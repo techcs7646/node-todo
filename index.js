@@ -4,36 +4,31 @@ const dotenv = require('dotenv').config();
 const cors = require('cors');
 
 const app = express();
-//use express.json() to get data into json format
-app.use(express.json());
-//Port 
 const PORT = process.env.PORT || 5500;
 
-//use cors
-// app.use(cors(
-//   {
-//     origin: ["https://dynamic-list-mern-sandeepak.vercel.app"],
-//     methods: ["POST", "GET", "PUT", "DELETE"],
-//     credentials:true
-//   }
-// ));
+// Middleware
+app.use(express.json());  // Parse JSON data
+app.use(cors({ origin: '*', credentials: true }));  // Allow all origins (modify if needed)
 
-//import routes
+// Import Routes
 const TodoItemRoute = require('./routes/todoItems');
+
+// Root route for testing
 app.get('/', (req, res) => {
-  console.log("I'm Working");
-  res.send('Hello!'); 
+  console.log("Server is running!");
+  res.send('Hello from Render Deployment! 🚀'); 
 });
 
-//connect to mongodb ..
-mongoose.connect(process.env.DB_CONNECT)
-.then(()=> console.log("Database connected"))
-.catch(err => console.log(err))
+// MongoDB Connection
+mongoose.connect(process.env.DB_CONNECT, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("✅ Database connected successfully!"))
+.catch(err => console.error("❌ Database connection error:", err));
 
-
+// Use Routes
 app.use('/', TodoItemRoute);
 
-
-
-//connect to server
-app.listen(PORT, ()=> console.log(`Server connected on PORT ${PORT}`) );
+// Start Server
+app.listen(PORT, () => console.log(`🚀 Server running on PORT ${PORT}`));
